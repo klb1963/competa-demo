@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -26,9 +27,10 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/register/**").permitAll()
-                                .requestMatchers("/index").permitAll()
-                                .requestMatchers("/home").permitAll()
+                        authorize.requestMatchers("/index").permitAll()
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/register").permitAll() // убрал /** после register
+                                .requestMatchers("/home/**").permitAll()
                                 .requestMatchers("/users").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                                 .and()
@@ -45,6 +47,13 @@ public class SpringSecurity {
                 );
         return http.build();
     }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http.addFilterAfter(
+//                new CustomFilter(), BasicAuthenticationFilter.class);
+//        return http.build();
+//    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

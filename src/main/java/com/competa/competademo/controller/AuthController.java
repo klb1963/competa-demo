@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     // handler method to handle home page "/"request
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(){
         return "home";
     }
