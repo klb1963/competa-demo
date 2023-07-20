@@ -27,13 +27,19 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/index").permitAll()
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers("/register").permitAll() // убрал /** после register
-                                .requestMatchers("/home/**").permitAll()
-                                .requestMatchers("/users").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                                .and()
+                                authorize.requestMatchers("/index").permitAll()
+                                        .requestMatchers("/register/**").permitAll()
+                                        .requestMatchers("/home").permitAll()
+                                        .requestMatchers("/users").hasRole("ADMIN")
+//        //http.csrf().disable();
+//                http.authorizeHttpRequests((authorize) ->
+//                        authorize.requestMatchers("/index").permitAll()
+//                                // .requestMatchers("/").permitAll()
+//                                .requestMatchers("/register").permitAll()
+//                                .requestMatchers("/home/**").permitAll()
+//                                .requestMatchers("/users").hasRole("ADMIN")
+//                                .requestMatchers("/competa/**").hasRole("USER")
+//                                .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")
@@ -47,13 +53,6 @@ public class SpringSecurity {
                 );
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.addFilterAfter(
-//                new CustomFilter(), BasicAuthenticationFilter.class);
-//        return http.build();
-//    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
