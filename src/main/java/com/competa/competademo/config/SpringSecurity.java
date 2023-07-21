@@ -28,8 +28,15 @@ public class SpringSecurity {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                                 authorize.requestMatchers("/index").permitAll()
+                                        .requestMatchers("/").permitAll()
+                                        .requestMatchers("/about").permitAll()
+                                        .requestMatchers("/home").hasRole("USER")
                                         .requestMatchers("/register/**").permitAll()
-                                        .requestMatchers("/home").permitAll()
+                                        .requestMatchers("/competa").hasRole("USER")
+                                        .requestMatchers("/competa/add").hasRole("USER")
+                                        .requestMatchers("/competa/*").hasRole("USER")
+                                        .requestMatchers("/competa/*/edit").hasRole("USER")
+                                        .requestMatchers("/user").hasRole("USER")
                                         .requestMatchers("/users").hasRole("ADMIN")
 //        //http.csrf().disable();
 //                http.authorizeHttpRequests((authorize) ->

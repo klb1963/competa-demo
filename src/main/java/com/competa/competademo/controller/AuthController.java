@@ -4,6 +4,7 @@ package com.competa.competademo.controller;
 
 import com.competa.competademo.dto.UserDto;
 import com.competa.competademo.entity.User;
+import com.competa.competademo.models.Competa;
 import com.competa.competademo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -26,13 +27,19 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // handler method to handle home page "/"request
+    // handler method to handle home page "/" request
     @GetMapping("/")
     public String home(){
+        return "index";
+    }
+
+    // handler method to handle home page "/home"request
+    @GetMapping("/home")
+    public String home1(){
         return "home";
     }
 
-    // handler method to handle home page "index"request
+    // handler method to handle home page "index" request
     @GetMapping("/index")
     public String index(){
         return "index";
