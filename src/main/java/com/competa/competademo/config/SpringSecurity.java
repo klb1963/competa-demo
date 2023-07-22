@@ -36,17 +36,9 @@ public class SpringSecurity {
                                         .requestMatchers("/competa/add").hasRole("USER")
                                         .requestMatchers("/competa/*").hasRole("USER")
                                         .requestMatchers("/competa/*/edit").hasRole("USER")
+                                        .requestMatchers("/competa/*/remove").hasRole("USER")
                                         .requestMatchers("/user").hasRole("USER")
                                         .requestMatchers("/users").hasRole("ADMIN")
-//        //http.csrf().disable();
-//                http.authorizeHttpRequests((authorize) ->
-//                        authorize.requestMatchers("/index").permitAll()
-//                                // .requestMatchers("/").permitAll()
-//                                .requestMatchers("/register").permitAll()
-//                                .requestMatchers("/home/**").permitAll()
-//                                .requestMatchers("/users").hasRole("ADMIN")
-//                                .requestMatchers("/competa/**").hasRole("USER")
-//                                .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")

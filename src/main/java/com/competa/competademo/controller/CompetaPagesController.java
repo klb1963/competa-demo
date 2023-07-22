@@ -42,7 +42,7 @@ public class CompetaPagesController {
     public String competaAdd(@ModelAttribute Competa competa, Model model) {
         model.addAttribute("competa", new Competa());
         competaRepository.save(competa);
-        return "redirect:/competa"; // переход на страницу
+        return "redirect:/competa"; // переход на страницу redirect:/competa"
     }
 
     @GetMapping ("/competa/{id}")  // переход на страницу

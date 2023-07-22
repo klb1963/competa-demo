@@ -41,7 +41,11 @@
       <label class="form-check-label" for="defaultCheck1">
         Public
       </label>
-    </div> <br>
+    </div>
+    <br>
+    <!--        скрытое поле для передачи user_id -->
+    <input  type="hidden" th:value="${competa.user_id}" name="user_id" />
+    <!--        скрытое поле для передачи user_id -->
     <button type="submit" class="btn btn-success"> Update </button>
     <a th:href="@{/competa}" class="btn btn-secondary"> Back </a>
   </form>
