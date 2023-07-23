@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+//    @Override
+//    public User findById(long id) {
+//        return userRepository.findById(id);
+//    }
+
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAll();
@@ -65,6 +70,7 @@ public class UserServiceImpl implements UserService {
         userDto.setFirstName(name[0]);
         userDto.setLastName(name[1]);
         userDto.setEmail(user.getEmail());
+        userDto.setId(user.getId()); // дописал
         return userDto;
     }
 

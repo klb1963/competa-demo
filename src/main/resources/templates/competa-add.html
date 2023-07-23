@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <!--Подключаем шаблонизатор-->
-<html xmlns:th="http://www.thymeleaf.org">
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <title>My Competas</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -10,9 +11,12 @@
 <header th:insert="blocks/header" :: header></header>
 
 <div class = "container mt-5 mb-5">
+
     <h1> Are you about to add a new Competa? </h1>
+    <br>
+    <div sec:authorize="isAuthenticated()">Authenticated as <span sec:authentication="name"></span></div>
     <br><br>
-    <form action="#" th:action="@{/competa/add}" method="post" th:object="${competa}">
+    <form action="#" th:action="@{/competa/add}" th:object="${competa}" method="post">
 <!--     связали форму с объектом competa-->
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="competa_type" id="inlineRadio1" value="Education"
@@ -44,16 +48,6 @@
         <!--            input data-->
         <input type="date" name="dateOut" class="form-control" id="dateOutAdd" placeholder="DateOut"
                th:field="*{dateOut}" required><br>
-        <!--            end of input data -->
-        <!--            <div class="form-check form-check-inline">-->
-        <!--                <input class="form-check-input" type="radio" name="competa_status" id="inlineRadio1" value="Public" checked required>-->
-        <!--                <label class="form-check-label" for="inlineRadio1">Public</label>-->
-        <!--            </div>-->
-        <!--            <div class="form-check form-check-inline">-->
-        <!--                <input class="form-check-input" type="radio" name="competa_status" id="inlineRadio2" value="Private" required>-->
-        <!--                <label class="form-check-label" for="inlineRadio2">Private</label>-->
-        <!--            </div>-->
-
         <div class="form-check">
             <input class="form-check-input" name="status" type="checkbox" value="true" id="defaultCheck1"
                    th:field="*{status}">
@@ -61,9 +55,9 @@
                 Public
             </label>
         </div>
-<!--        скрытое поле для передачи user_id -->
-        <input  type="hidden" th:value="${competa.user_id}" name="user_id" />
-<!--        скрытое поле для передачи user_id -->
+<!--        скрытое поле для передачи user_name -->
+        <input  type="hidden" name="user_name" th:field="*{userName}"/>
+<!--        скрытое поле для передачи user_name -->
         <br> <br>
         <button type="submit" class="btn btn-primary"> Add</button>
         <a th:href="@{/competa}" class="btn btn-secondary"> Back </a>

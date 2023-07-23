@@ -21,10 +21,10 @@ public class Competa {
     @DateTimeFormat (pattern = "yyyy-mm-dd")
     private Date dateOut;
     private String timeOut;
-    private Long user_id;
+    private String userName;
 
     // конструктор со всеми полями
-    public Competa(Long id, String competa_type, String title, String description, boolean status, int views, Date dateOut, String timeOut, Long user_id) {
+    public Competa(Long id, String competa_type, String title, String description, boolean status, int views, Date dateOut, String timeOut, long userId) {
         this.id = id;
         this.competa_type = competa_type;
         this.title = title;
@@ -33,7 +33,7 @@ public class Competa {
         this.views = views;
         this.dateOut = dateOut;
         this.timeOut = timeOut;
-        this.user_id = user_id;
+        this.userName = userName;
     }
 
     public Competa(String title, String description, String competa_type, Date dateOut, boolean status) {
@@ -118,11 +118,11 @@ public class Competa {
         this.views = views;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -21,6 +21,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Column
     private Long id;
 
     @Column(nullable=false)

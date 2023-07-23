@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <!--Подключаем шаблонизатор-->
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<!--<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">-->
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
   <title> Competa edit </title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -11,7 +12,11 @@
 <header th:insert="blocks/header" :: header></header>
 
 <div class="container mt-5 mb-5">
-  <h1>Edit Competa</h1><br>
+  <h1>Edit Competa</h1>
+  <br>
+  <div sec:authorize="isAuthenticated()">Authenticated as <span sec:authentication="name"></span></div>
+  <br>
+
   <!--    <form action="#" th:action="@{/competa/add}" method="post" th:object="${competa}"> // связали форму с объектом competa-->
   <form action="#" th:action="@{/competa/{id}/edit(id=${competa.id})}" th:object="${competa}" method="post">
 
@@ -44,7 +49,7 @@
     </div>
     <br>
     <!--        скрытое поле для передачи user_id -->
-    <input  type="hidden" th:value="${competa.user_id}" name="user_id" />
+    <input  type="hidden" th:field="*{userName}" name="userName" />
     <!--        скрытое поле для передачи user_id -->
     <button type="submit" class="btn btn-success"> Update </button>
     <a th:href="@{/competa}" class="btn btn-secondary"> Back </a>
