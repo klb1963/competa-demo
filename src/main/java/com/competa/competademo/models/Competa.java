@@ -1,19 +1,18 @@
 package com.competa.competademo.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.competa.competademo.entity.User;
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Competa {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id; // идентификатор
-    private String competa_type; // тип = ed-competa, job-competa, hs-competa, ss-competa
+    private String competaType; // тип = ed-competa, job-competa, hs-competa, ss-competa
     private String title;
     private String description;
     private boolean status;
@@ -21,32 +20,39 @@ public class Competa {
     @DateTimeFormat (pattern = "yyyy-mm-dd")
     private Date dateOut;
     private String timeOut;
-    private String userName;
+
+    @ManyToOne
+    private User user;
+
+   // private String userName;
 
     // конструктор со всеми полями
-    public Competa(Long id, String competa_type, String title, String description, boolean status, int views, Date dateOut, String timeOut, long userId) {
+    public Competa(Long id, String competaType, String title, String description, boolean status, int views, Date dateOut, String timeOut, User user) {
         this.id = id;
-        this.competa_type = competa_type;
+        this.competaType = competaType;
         this.title = title;
         this.description = description;
         this.status = status;
         this.views = views;
         this.dateOut = dateOut;
         this.timeOut = timeOut;
-        this.userName = userName;
+        this.user = user;
     }
 
-    public Competa(String title, String description, String competa_type, Date dateOut, boolean status) {
+    public Competa(String title, String description, String competaType, Date dateOut, boolean status) {
         this.title = title;
         this.description = description;
-        this.competa_type = competa_type;
-        this.status = status;
+        this.competaType = competaType;
         this.dateOut = dateOut;
         this.status = status;
     }
 
     // конструктор пустой
     public Competa() {
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean isStatus() {
@@ -73,12 +79,12 @@ public class Competa {
         this.timeOut = timeOut;
     }
 
-    public String getCompeta_type() {
-        return competa_type;
+    public String getCompetaType() {
+        return competaType;
     }
 
-    public void setCompeta_type(String competa_type) {
-        this.competa_type = competa_type;
+    public void setCompetaType(String competaType) {
+        this.competaType = competaType;
     }
 
     public Competa(String titel, String description) {
@@ -118,11 +124,20 @@ public class Competa {
         this.views = views;
     }
 
-    public String getUserName() {
-        return userName;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Competa competa = (Competa) o;
+        return Objects.equals(id, competa.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

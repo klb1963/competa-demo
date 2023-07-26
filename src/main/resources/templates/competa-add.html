@@ -19,26 +19,26 @@
     <form action="#" th:action="@{/competa/add}" th:object="${competa}" method="post">
 <!--     связали форму с объектом competa-->
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="competa_type" id="inlineRadio1" value="Education"
-                   th:field="*{competa_type}" required>
+            <input class="form-check-input" type="radio" name="competaType" id="inlineRadio1" value="Education"
+                   th:field="*{competaType}" required>
             <label class="form-check-label" for="inlineRadio1">Education</label>
         </div>
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="competa_type" id="inlineRadio2" value="Job"
-                   th:field="*{competa_type}" required>
+            <input class="form-check-input" type="radio" name="competaType" id="inlineRadio2" value="Job"
+                   th:field="*{competaType}" required>
             <label class="form-check-label" for="inlineRadio2">Job</label>
         </div>
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="competa_type" id="inlineRadio3" value="Hard skill"
-                   th:field="*{competa_type}" required>
+            <input class="form-check-input" type="radio" name="competaType" id="inlineRadio3" value="Hard skill"
+                   th:field="*{competaType}" required>
             <label class="form-check-label" for="inlineRadio3">Hard skill</label>
         </div>
 
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="competa_type" id="inlineRadio4" value="Soft skill"
-                   th:field="*{competa_type}" required>
+            <input class="form-check-input" type="radio" name="competaType" id="inlineRadio4" value="Soft skill"
+                   th:field="*{competaType}" required>
             <label class="form-check-label" for="inlineRadio3">Soft skill</label>
         </div>
         <br><br>
@@ -56,7 +56,7 @@
             </label>
         </div>
 <!--        скрытое поле для передачи user_name -->
-        <input  type="hidden" name="user_name" th:field="*{userName}"/>
+<!--        <input  type="hidden" name="user_name" th:field="*{userName}"/>-->
 <!--        скрытое поле для передачи user_name -->
         <br> <br>
         <button type="submit" class="btn btn-primary"> Add</button>

@@ -21,19 +21,19 @@
   <form action="#" th:action="@{/competa/{id}/edit(id=${competa.id})}" th:object="${competa}" method="post">
 
     <div class="form-check form-check-inline">
-      <input th:field="*{competa_type}" th:checked="${competa.competa_type} == 'Education'" class="form-check-input" type="radio" name="competa_type" id="inlineRadio1" value="Education">
+      <input th:field="*{competaType}" th:checked="${competa.competaType} == 'Education'" class="form-check-input" type="radio" name="competaType" id="inlineRadio1" value="Education">
       <label class="form-check-label" for="inlineRadio1">Education</label>
     </div>
     <div class="form-check form-check-inline">
-      <input th:field="*{competa_type}" th:checked = "${competa.competa_type} == 'Job'" type="radio" name="competa_type" id="inlineRadio2" value="Job">
+      <input th:field="*{competaType}" th:checked = "${competa.competaType} == 'Job'" type="radio" name="competaType" id="inlineRadio2" value="Job">
       <label class="form-check-label" for="inlineRadio2">Job</label>
     </div>
     <div class="form-check form-check-inline">
-      <input th:field="*{competa_type}" th:checked = "${competa.competa_type} == 'Hard skill'" class="form-check-input" type="radio" name="competa_type" id="inlineRadio3" value="Hard skill">
+      <input th:field="*{competaType}" th:checked = "${competa.competaType} == 'Hard skill'" class="form-check-input" type="radio" name="competaType" id="inlineRadio3" value="Hard skill">
       <label class="form-check-label" for="inlineRadio3">Hard skill</label>
     </div>
     <div class="form-check form-check-inline">
-      <input th:field="*{competa_type}" th:checked = "${competa.competa_type} == 'Soft skill'" class="form-check-input" type="radio" name="competa_type" id="inlineRadio4" value="Soft skill">
+      <input th:field="*{competaType}" th:checked = "${competa.competaType} == 'Soft skill'" class="form-check-input" type="radio" name="competaType" id="inlineRadio4" value="Soft skill">
       <label class="form-check-label" for="inlineRadio3">Soft skill</label>
     </div>
     <br><br>
@@ -42,15 +42,12 @@
     <input type="date" th:value="${competa.dateOut}" th:field="*{dateOut}" name="dateOut" class="form-control" id="dateOutAdd" placeholder="DateOut"><br>
     <div class="form-check">
       <input class="form-check-input" th:checked="${competa.status}" th:field="*{status}" name="status" type="checkbox" id="defaultCheck1">
-      <!--        th:field="*{competa_type}"-->
+      <!--        th:field="*{competaType}"-->
       <label class="form-check-label" for="defaultCheck1">
         Public
       </label>
     </div>
     <br>
-    <!--        скрытое поле для передачи user_id -->
-    <input  type="hidden" th:field="*{userName}" name="userName" />
-    <!--        скрытое поле для передачи user_id -->
     <button type="submit" class="btn btn-success"> Update </button>
     <a th:href="@{/competa}" class="btn btn-secondary"> Back </a>
   </form>

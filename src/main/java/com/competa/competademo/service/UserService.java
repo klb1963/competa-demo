@@ -10,8 +10,10 @@ public interface UserService {
 
     User findByEmail(String email);
 
-//    User findById (long id);
+    // User findById (long id);
 
     List<UserDto> findAllUsers();
+
+    void saveUser(User user);
 
 }

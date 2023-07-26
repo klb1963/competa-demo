@@ -1,34 +1,41 @@
 package com.competa.competademo.controller;
 
-import com.competa.competademo.dto.UserDto;
 import com.competa.competademo.entity.User;
 import com.competa.competademo.models.Competa;
 import com.competa.competademo.repository.CompetaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.competa.competademo.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class CompetaPagesController {
 
-    @Autowired
-    private CompetaRepository competaRepository;
-    // здесь должны быть все Competa текущего пользователя, а пока просто все из репозитория
+
+    private final CompetaRepository competaRepository;
+
+    private final UserService userService;
+
+    public CompetaPagesController(CompetaRepository competaRepository, UserService userService) {
+        this.competaRepository = competaRepository;
+        this.userService = userService;
+    }
+
+    // здесь должны быть все Competa текущего пользователя, а пока просто всё, что есть из репозитория
     @GetMapping("/competa")
     public String competaMain(Model model){
-        Iterable<Competa> competas = competaRepository.findAll(); // пока включено
-
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
-        // String name = authentication.getName(); // получение имени текущего пользователя
-        // теперь по имени текущего пользователя надо получить его id - как это сделать?
-        // Optional<Competa> competaByUser = competaRepository.findAllById(User.id); // вернем из репозитория все, что нужно по id
-
-        model.addAttribute("competas", competas);
+      //  Iterable<Competa> competas = competaRepository.findAll(); // пока включено
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
+        String name = authentication.getName(); // получение имени текущего пользователя
+        // теперь по имени текущего пользователя надо получить его id
+        User user = userService.findByEmail(name);
+        List<Competa> userCompetas = competaRepository.findAllByUser(user);
+        model.addAttribute("competas", userCompetas);
         return "competa-main"; // вызывается шаблон
     }
 
@@ -43,8 +50,11 @@ public class CompetaPagesController {
         model.addAttribute("competa", new Competa());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
         String name = authentication.getName(); // получение имени текущего пользователя
-        competa.setUserName(name); // задаем значение поля в competa
+        User user = userService.findByEmail(name);
+        competa.setUser(user); // задаем значение поля в competa
         competaRepository.save(competa); // сохраняем объект competa
+        user.getCompetas().add(competa);
+        userService.saveUser(user);
         return "redirect:/competa"; // переход на страницу redirect:/competa"
     }
 
