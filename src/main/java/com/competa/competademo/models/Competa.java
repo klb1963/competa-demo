@@ -12,7 +12,7 @@ public class Competa {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
     private Long id; // идентификатор
-    private String competaType; // тип = ed-competa, job-competa, hs-competa, ss-competa
+    private String competaType; // тип = edCompeta, jobCompeta, hsCompeta, ssCompeta
     private String title;
     private String description;
     private boolean status;
