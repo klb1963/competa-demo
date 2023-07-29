@@ -1,20 +1,42 @@
 package com.competa.competademo.models;
 
 import com.competa.competademo.entity.User;
+import com.competa.competademo.models.Type;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
+// @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name="competa")
 public class Competa {
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
+    @Getter
+    @Column
     private Long id; // идентификатор
-    private String competaType; // тип = edCompeta, jobCompeta, hsCompeta, ssCompeta
+    private String competaType; // должен быть тип - из таблицы Type
+    // TODO - как здесь выполнить замену competaType на список из базы данных?
+    // ===========================
+    // @Column(nullable=false)
+    // private List<Type> types = new ArrayList<Type>();
+    // ===========================
+    @Column(nullable=false)
     private String title;
+    @Column(nullable=false)
     private String description;
+    @Column(nullable=false)
     private boolean status;
     private int views;
     @DateTimeFormat (pattern = "yyyy-mm-dd")
