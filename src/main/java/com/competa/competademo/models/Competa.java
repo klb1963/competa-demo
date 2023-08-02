@@ -1,11 +1,9 @@
 package com.competa.competademo.models;
 
 import com.competa.competademo.entity.User;
-import com.competa.competademo.models.Type;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,34 +17,37 @@ import java.util.Objects;
 // @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="competa")
+@Table(name = "competa")
 public class Competa {
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     @Column
     private Long id; // идентификатор
+    // можно удалять
     private String competaType; // должен быть тип - из таблицы Type
     // TODO - как здесь выполнить замену competaType на список из базы данных?
+    // так же как и с user -> competa
     // ===========================
     // @Column(nullable=false)
     // private List<Type> types = new ArrayList<Type>();
     // ===========================
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String title;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String description;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private boolean status;
     private int views;
-    @DateTimeFormat (pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateOut;
-    private String timeOut;
+    private String timeOut; 
 
     @ManyToOne
     private User user;
-
-   // private String userName;
+    //fix
+    @ManyToOne
+    private Type type;
 
     // конструктор со всеми полями
     public Competa(Long id, String competaType, String title, String description, boolean status, int views, Date dateOut, String timeOut, User user) {

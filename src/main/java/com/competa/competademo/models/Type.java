@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="competa_type")
+@Table(name = "competa_type")
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,10 @@ public class Type {
     @Column
     private Integer id;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String type;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competa") // каждый тип компеты может быть у многих компет
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "type") // каждый тип компеты может быть у многих компет
     private List<Competa> competas = new ArrayList<>();
 
     public String getType() {

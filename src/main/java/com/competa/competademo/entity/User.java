@@ -19,10 +19,12 @@ import java.util.Objects;
 @Table(name="users")
 
 public class User {
+    //todo точно тут нужно?
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //todo тут с getter путница. Есть уже на уровне класса
     @Getter
     @Column
     private Long id;
@@ -36,6 +38,8 @@ public class User {
     @Column(nullable=false)
     private String password;
 
+    // todo это обратить внимание на cascade=CascadeType.ALL.
+    // todo надо перепроверить, но вроде в этом случае если удалить роль у любого пользователя, то она так же удалиться из таблицы ROLES
     @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name="users_roles",
