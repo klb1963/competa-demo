@@ -5,15 +5,21 @@ import com.competa.competademo.entity.User;
 
 import java.util.List;
 
+
 public interface UserService {
-    void saveUser(UserDto userDto);
+    User saveUser(UserDto userDto);
 
-    User findByEmail(String email);
+    User addUserRole(long userId, String roleName);
 
-    // User findById (long id);
+    User removeUserRole(long userId, String roleName);
+
+    boolean isUserByEmailExist(String email);
+
+    User findById(long id);
 
     List<UserDto> findAllUsers();
 
-    void saveUser(User user);
+    User saveUser(User user);
 
+    User findByEmail(String userEmail);
 }

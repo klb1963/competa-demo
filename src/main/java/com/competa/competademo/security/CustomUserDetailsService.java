@@ -1,6 +1,5 @@
 package com.competa.competademo.security;
 
-import com.competa.competademo.dto.UserDto;
 import com.competa.competademo.entity.Role;
 import com.competa.competademo.entity.User;
 import com.competa.competademo.repository.UserRepository;
@@ -12,12 +11,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     // поле класса
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     // конструктор
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -27,22 +26,21 @@ public class CustomUserDetailsService implements UserDetailsService {
     // методы
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        final Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if (user != null) {
+        if (userOptional.isPresent()) {
+            final User user = userOptional.get();
             return new org.springframework.security.core.userdetails.User(user.getEmail(),
                     user.getPassword(),
                     mapRolesToAuthorities(user.getRoles()));
         } else {
-            throw new UsernameNotFoundException("Invalid username or password.");
+            throw new UsernameNotFoundException(String.format("User with email '%s' not found", email));
         }
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        Collection<? extends GrantedAuthority> mapRoles = roles.stream()
+        return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
-        return mapRoles;
+                .toList();
     }
-
 }
