@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     public User saveUser(@NonNull CreateUserDto userDto) {
 
         if (isUserByEmailExist(userDto.getEmail())) {
-            throw new UserAlreadyExistsException("User with this email {0} already exists", userDto.getEmail());
+            throw new UserAlreadyExistsException("User with this email '{}' already exists", userDto.getEmail());
         }
 
         final User user = userDto.toEntity();
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id {} not found", userId));
+                .orElseThrow(() -> new UserNotFoundException("User with id '{}' not found", userId));
     }
 
     @Override
