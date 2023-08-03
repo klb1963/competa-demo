@@ -64,12 +64,22 @@ public class DataInitializer implements ApplicationRunner {
         final CreateUserDto adminUserDto = userProperties.getAdmin();
 
         createRoles();
+
+        saveUser(userDto);
+        saveUser(adminUserDto);
+
+        if (adminUserDto.getId() != null) {
+            userService.addUserRole(adminUserDto.getId(), ROLE_ADMIN);
+        }
+    }
+
+    private void saveUser(final CreateUserDto userDto) {
         try {
-            userService.saveUser(userDto);
-            Long adminUserId = userService.saveUser(adminUserDto).getId();
-            userService.addUserRole(adminUserId, ROLE_ADMIN);
+            final long savedUserID = userService.saveUser(userDto).getId();
+            userDto.setId(savedUserID);
+            log.debug("Saved init user with email {} and id {}", userDto.getEmail(), userDto.getId());
         } catch (UserAlreadyExistsException ex) {
-            log.debug(ex.getMessage());
+            log.error(ex.getMessage());
         }
     }
 
