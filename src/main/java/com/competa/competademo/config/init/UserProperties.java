@@ -1,6 +1,6 @@
 package com.competa.competademo.config.init;
 
-import com.competa.competademo.dto.UserDto;
+import com.competa.competademo.dto.CreateUserDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,6 +17,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class UserProperties {
-    private UserDto user;
-    private UserDto admin;
+    private CreateUserDto user;
+    private CreateUserDto admin;
 }

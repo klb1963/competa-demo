@@ -9,6 +9,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity

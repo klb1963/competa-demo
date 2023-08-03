@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface CompetaRepository extends CrudRepository<Competa, Long> {
+    long countByUser(User user);
 
     @Query("select с from Competa с where с.user = ?1")
     List<Competa> findAllByUser(User user);

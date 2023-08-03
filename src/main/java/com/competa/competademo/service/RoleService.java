@@ -1,4 +1,4 @@
-package com.competa.competademo.service.impl;
+package com.competa.competademo.service;
 
 import com.competa.competademo.entity.Role;
 import lombok.NonNull;

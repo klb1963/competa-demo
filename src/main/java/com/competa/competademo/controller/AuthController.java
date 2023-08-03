@@ -1,6 +1,8 @@
 package com.competa.competademo.controller;
 
+import com.competa.competademo.dto.CreateUserDto;
 import com.competa.competademo.dto.UserDto;
+import com.competa.competademo.exceptions.UserAlreadyExistsException;
 import com.competa.competademo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -51,25 +53,29 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         // create model object to store form data
-        UserDto user = new UserDto();
+        CreateUserDto user = new CreateUserDto();
         model.addAttribute("user", user);
         return "register";
     }
 
     // handler method to handle register user form submit request
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto user,
+    public String registration(@Valid @ModelAttribute("user") CreateUserDto user,
                                BindingResult result,
                                Model model) {
-        if (userService.isUserByEmailExist(user.getEmail())) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
-        }
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "register";
         }
-        userService.saveUser(user);
-        return "redirect:/register?success";
+
+        try {
+            userService.saveUser(user);
+            return "redirect:/register?success";
+        } catch (UserAlreadyExistsException ex) {
+            result.rejectValue("email", "", ex.getMessage());
+            model.addAttribute("user", user);
+            return "register";
+        }
     }
 
     @GetMapping("/users")

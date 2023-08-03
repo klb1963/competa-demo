@@ -1,10 +1,11 @@
 package com.competa.competademo.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.competa.competademo.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import org.hibernate.validator.constraints.Normalized;
+
+import static com.competa.competademo.dto.UserDtoHelper.parseUserName;
 
 @Getter
 @Setter
@@ -13,16 +14,30 @@ import org.hibernate.validator.constraints.Normalized;
 @Builder
 public class UserDto {
 
-    private Long id;
+    protected Long id;
     @NotEmpty
-    private String firstName;
+    protected String firstName;
     @NotEmpty
-    private String lastName;
+    protected String lastName;
     @NotEmpty(message = "Email should not be empty")
     @Email
-    @Normalized
-    private String email;
-    @NotEmpty(message = "Password should not be empty")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
+    protected String email;
+
+    public UserDto(final User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        final UserNameModel userNameModel = parseUserName(user);
+        this.firstName = userNameModel.firstName();
+        this.lastName = userNameModel.lastName();
+    }
+
+    public User toEntity() {
+        return User.builder()
+                .name(parseUserName(this))
+                .email(this.email)
+                .id(this.getId())
+                .build();
+    }
+
+
 }

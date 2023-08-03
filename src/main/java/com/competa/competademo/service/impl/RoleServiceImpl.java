@@ -2,6 +2,7 @@ package com.competa.competademo.service.impl;
 
 import com.competa.competademo.entity.Role;
 import com.competa.competademo.repository.RoleRepository;
+import com.competa.competademo.service.RoleService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;

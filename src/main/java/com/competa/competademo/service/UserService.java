@@ -1,5 +1,6 @@
 package com.competa.competademo.service;
 
+import com.competa.competademo.dto.CreateUserDto;
 import com.competa.competademo.dto.UserDto;
 import com.competa.competademo.entity.User;
 
@@ -7,7 +8,9 @@ import java.util.List;
 
 
 public interface UserService {
-    User saveUser(UserDto userDto);
+
+
+    User saveUser(CreateUserDto userDto);
 
     User addUserRole(long userId, String roleName);
 
@@ -22,4 +25,6 @@ public interface UserService {
     User saveUser(User user);
 
     User findByEmail(String userEmail);
+
+    User getAuthUser();
 }

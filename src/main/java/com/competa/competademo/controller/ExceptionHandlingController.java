@@ -1,10 +1,10 @@
 package com.competa.competademo.controller;
 
+import com.competa.competademo.exceptions.CompetaNotFoundException;
+import com.competa.competademo.exceptions.UserAlreadyExistsException;
 import com.competa.competademo.exceptions.UserNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.naming.AuthenticationException;
@@ -15,19 +15,30 @@ import javax.naming.AuthenticationException;
  */
 @ControllerAdvice
 public class ExceptionHandlingController {
+
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Something went wrong")
-    public ModelAndView databaseError(UserNotFoundException ex) {
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("errorMessage", ex.getMessage());
-        return modelAndView;
+    public ModelAndView handleError(final UserNotFoundException ex) {
+        return fillModelAndView(ex.getMessage());
+    }
+
+    @ExceptionHandler(CompetaNotFoundException.class)
+    public ModelAndView handleError(final CompetaNotFoundException ex) {
+        return fillModelAndView(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ModelAndView handleError(final UserAlreadyExistsException ex) {
+        return fillModelAndView(ex.getMessage());
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Something went wrong")
-    public ModelAndView databaseError(AuthenticationException ex) {
-        ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("errorMessage", ex.getMessage());
+    public ModelAndView handleError(final AuthenticationException ex) {
+        return fillModelAndView(ex.getMessage());
+    }
+
+    private ModelAndView fillModelAndView(String message) {
+        final ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("errorMessage", message);
         return modelAndView;
     }
 }

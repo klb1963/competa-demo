@@ -1,11 +1,7 @@
 package com.competa.competademo.controller;
 
-import com.competa.competademo.entity.Competa;
-import com.competa.competademo.entity.User;
-import com.competa.competademo.repository.CompetaRepository;
-import com.competa.competademo.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.competa.competademo.dto.CompetaDto;
+import com.competa.competademo.service.CompetaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,47 +17,37 @@ public class CompetaPagesController {
 
     private static final String COMPETA_VIEW_VARIABLE = "competa";
     private static final String REDIRECT_COMPETA = "redirect:/competa";
-    private final CompetaRepository competaRepository;
 
-    private final UserService userService;
+    private final CompetaService<CompetaDto> competaService;
 
-    public CompetaPagesController(CompetaRepository competaRepository, UserService userService) {
-        this.competaRepository = competaRepository;
-        this.userService = userService;
+
+    public CompetaPagesController(CompetaService<CompetaDto> competaService) {
+        this.competaService = competaService;
     }
 
     @GetMapping("/competa")
     public String competaMain(Model model) {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
-        final String authUserEmail = authentication.getName(); // получение имени текущего пользователя
-        final User user = userService.findByEmail(authUserEmail);
-        final List<Competa> userCompetas = competaRepository.findAllByUser(user);
+        final List<CompetaDto> userCompetas = competaService.findAllByAuthUser();
         model.addAttribute("competas", userCompetas);
         return "competa-main"; // вызывается шаблон
     }
 
     @GetMapping("/competa/add")  // переход на страницу
     public String competaAdd(Model model) {
-        model.addAttribute(COMPETA_VIEW_VARIABLE, new Competa());// через model связали шаблон с классом Competa
+        model.addAttribute(COMPETA_VIEW_VARIABLE, new CompetaDto());// через model связали шаблон с классом Competa
         return "competa-add";  // вызывается шаблон
     }
 
     @PostMapping("/competa/add")
-    public String competaAdd(@ModelAttribute Competa competa, Model model) {
-        model.addAttribute(COMPETA_VIEW_VARIABLE, new Competa());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
-        String authUserEmail = authentication.getName(); // получение имени текущего пользователя
-        User user = userService.findByEmail(authUserEmail);
-        competa.setUser(user); // задаем значение поля в competa
-        competaRepository.save(competa); // сохраняем объект competa
-        user.getCompetas().add(competa);
-        userService.saveUser(user);
+    public String competaAdd(@ModelAttribute CompetaDto competa, Model model) {
+        model.addAttribute(COMPETA_VIEW_VARIABLE, new CompetaDto());
+        competaService.addToAuthUser(competa);
         return REDIRECT_COMPETA; // переход на страницу redirect:/competa"
     }
 
     @GetMapping("/competa/{id}")  // переход на страницу
     public String competaDetails(@PathVariable(value = "id") long id, Model model) {
-        Optional<Competa> competa = competaRepository.findById(id); // в классе Optional создали экземпляр
+        final Optional<CompetaDto> competa = competaService.findById(id);
         if (competa.isPresent()) {
             model.addAttribute(COMPETA_VIEW_VARIABLE, competa.get());
             return "competa-details";
@@ -72,7 +58,7 @@ public class CompetaPagesController {
 
     @GetMapping("/competa/{id}/edit")
     public String competaEdit(@PathVariable(value = "id") long id, Model model) {
-        Optional<Competa> competa = competaRepository.findById(id); // взяли "футляр"
+        final Optional<CompetaDto> competa = competaService.findById(id); // взяли "футляр"
         if (competa.isPresent()) {  // если внутри "футляра" есть результат
             model.addAttribute(COMPETA_VIEW_VARIABLE, competa.get()); // взяли в model
             return "competa-edit";
@@ -82,20 +68,14 @@ public class CompetaPagesController {
     }
 
     @PostMapping("/competa/{id}/edit") //
-    public String competaUpdate(@PathVariable(value = "id") long id, @ModelAttribute Competa competa) {
-        Competa competaToEdit = competaRepository.findById(id).orElseThrow();
-        competaToEdit.setTitle(competa.getTitle()); // название
-        competaToEdit.setDescription(competa.getDescription()); // описание
-        competaToEdit.setDateOut(competa.getDateOut()); // дата
-        competaToEdit.setStatus(competa.isStatus()); // статус
-        competaRepository.save(competaToEdit); // сохраняем в репозитории
+    public String competaUpdate(@PathVariable(value = "id") long id, @ModelAttribute CompetaDto competa) {
+        competaService.update(id, competa);
         return REDIRECT_COMPETA;
     }
 
     @PostMapping("/competa/{id}/remove")
     public String competaDelete(@PathVariable(value = "id") long id) {
-        Competa competa = competaRepository.findById(id).orElseThrow();
-        competaRepository.delete(competa);
+        competaService.remove(id);
         return REDIRECT_COMPETA;
     }
 }

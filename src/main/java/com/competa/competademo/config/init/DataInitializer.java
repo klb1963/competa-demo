@@ -1,9 +1,11 @@
 package com.competa.competademo.config.init;
 
-import com.competa.competademo.dto.UserDto;
+import com.competa.competademo.dto.CreateUserDto;
 import com.competa.competademo.entity.Role;
+import com.competa.competademo.exceptions.UserAlreadyExistsException;
 import com.competa.competademo.repository.RoleRepository;
 import com.competa.competademo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -23,6 +25,7 @@ import java.util.List;
  */
 @Component
 @Profile("dev")
+@Slf4j
 public class DataInitializer implements ApplicationRunner {
 
     private static final String ROLE_USER = "ROLE_USER";
@@ -57,18 +60,16 @@ public class DataInitializer implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) {
-        final UserDto userDto = userProperties.getUser();
-        final UserDto adminUserDto = userProperties.getAdmin();
+        final CreateUserDto userDto = userProperties.getUser();
+        final CreateUserDto adminUserDto = userProperties.getAdmin();
 
         createRoles();
-
-        if (!userService.isUserByEmailExist(userDto.getEmail())) {
+        try {
             userService.saveUser(userDto);
-        }
-
-        if (!userService.isUserByEmailExist(adminUserDto.getEmail())) {
             Long adminUserId = userService.saveUser(adminUserDto).getId();
             userService.addUserRole(adminUserId, ROLE_ADMIN);
+        } catch (UserAlreadyExistsException ex) {
+            log.debug(ex.getMessage());
         }
     }
 

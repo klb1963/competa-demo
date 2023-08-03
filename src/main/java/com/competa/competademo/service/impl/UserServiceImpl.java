@@ -1,13 +1,18 @@
 package com.competa.competademo.service.impl;
 
+import com.competa.competademo.dto.CreateUserDto;
 import com.competa.competademo.dto.UserDto;
 import com.competa.competademo.entity.Role;
 import com.competa.competademo.entity.User;
+import com.competa.competademo.exceptions.UserAlreadyExistsException;
 import com.competa.competademo.exceptions.UserNotFoundException;
 import com.competa.competademo.repository.UserRepository;
+import com.competa.competademo.service.RoleService;
 import com.competa.competademo.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +42,13 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public User saveUser(@NonNull UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
-        user.setEmail(userDto.getEmail());
+    public User saveUser(@NonNull CreateUserDto userDto) {
 
+        if (isUserByEmailExist(userDto.getEmail())) {
+            throw new UserAlreadyExistsException("User with this email {0} already exists", userDto.getEmail());
+        }
+
+        final User user = userDto.toEntity();
         //encrypt the password once we integrate spring security
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         final Role role = roleService.findRoleByNameAsOptional(INIT_USER_ROLE)
@@ -86,7 +93,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAllUsers() {
         return userRepository.findAll().stream()
-                .map(this::convertEntityToDto)
+                .map(UserDto::new)
                 .toList();
     }
 
@@ -102,25 +109,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with email '%s' not found", email)));
     }
 
-    private UserDto convertEntityToDto(User user) {
-        UserDto userDto = new UserDto();
-        String[] name = user.getName().split(" ");
-        switch (name.length) {
-            case 2 -> {
-                userDto.setFirstName(name[0]);
-                userDto.setLastName(name[1]);
-            }
-            case 1 -> {
-                userDto.setFirstName(name[0]);
-                userDto.setLastName("");
-            }
-            default -> {
-                userDto.setFirstName("");
-                userDto.setLastName("");
-            }
-        }
-        userDto.setEmail(user.getEmail());
-        userDto.setId(user.getId()); // дописал
-        return userDto;
+    @Override
+    public User getAuthUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // вызов контекста
+        final String authUserEmail = authentication.getName(); // получение имени текущего пользователя
+        return findByEmail(authUserEmail);
     }
 }
