@@ -62,16 +62,20 @@ public class DataInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         final CreateUserDto userDto = userProperties.getUser();
         final CreateUserDto adminUserDto = userProperties.getAdmin();
+        final CreateUserDto peterUserDto = userProperties.getPeter();
 
         createRoles();
         try {
             userService.saveUser(userDto);
+            userService.saveUser(peterUserDto);
             Long adminUserId = userService.saveUser(adminUserDto).getId();
             userService.addUserRole(adminUserId, ROLE_ADMIN);
         } catch (UserAlreadyExistsException ex) {
             log.debug(ex.getMessage());
         }
     }
+
+    private void saveUser(CreateUserDto createUserDto){}
 
     /**
      * Создает предопределенные роли, если они еще не существуют в базе данных.

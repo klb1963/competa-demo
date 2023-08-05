@@ -19,4 +19,5 @@ import org.springframework.stereotype.Component;
 public class UserProperties {
     private CreateUserDto user;
     private CreateUserDto admin;
+    private CreateUserDto peter;
 }
