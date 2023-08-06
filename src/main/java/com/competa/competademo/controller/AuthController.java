@@ -1,10 +1,8 @@
 package com.competa.competademo.controller;
 
-//package net.javaguides.springboot.controller;
-
+import com.competa.competademo.dto.CreateUserDto;
 import com.competa.competademo.dto.UserDto;
-import com.competa.competademo.entity.User;
-import com.competa.competademo.models.Competa;
+import com.competa.competademo.exceptions.UserAlreadyExistsException;
 import com.competa.competademo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -20,7 +18,7 @@ import java.util.List;
 public class AuthController {
 
     // поле класса
-    private UserService userService;
+    private final UserService userService;
 
     // конструктор
     public AuthController(UserService userService) {
@@ -29,56 +27,59 @@ public class AuthController {
 
     // handler method to handle home page "/" request
     @GetMapping("/")
-    public String home(){
+    public String home() {
         return "index";
     }
 
     // handler method to handle home page "/home"request
     @GetMapping("/home")
-    public String home1(){
+    public String home1() {
         return "home";
     }
 
     // handler method to handle home page "index" request
     @GetMapping("/index")
-    public String index(){
+    public String index() {
         return "index";
     }
 
     // handler method to handle login request
     @GetMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
     // handler method to handle user registration form request
     @GetMapping("/register")
-    public String showRegistrationForm(Model model){
+    public String showRegistrationForm(Model model) {
         // create model object to store form data
-        UserDto user = new UserDto();
+        CreateUserDto user = new CreateUserDto();
         model.addAttribute("user", user);
         return "register";
     }
 
     // handler method to handle register user form submit request
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDto user,
+    public String registration(@Valid @ModelAttribute("user") CreateUserDto user,
                                BindingResult result,
-                               Model model){
-        User existing = userService.findByEmail(user.getEmail());
-        if (existing != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
-        }
+                               Model model) {
         if (result.hasErrors()) {
             model.addAttribute("user", user);
             return "register";
         }
-        userService.saveUser(user);
-        return "redirect:/register?success";
+
+        try {
+            userService.saveUser(user);
+            return "redirect:/register?success";
+        } catch (UserAlreadyExistsException ex) {
+            result.rejectValue("email", "", ex.getMessage());
+            model.addAttribute("user", user);
+            return "register";
+        }
     }
 
     @GetMapping("/users")
-    public String listRegisteredUsers(Model model){
+    public String listRegisteredUsers(Model model) {
         List<UserDto> users = userService.findAllUsers();
         model.addAttribute("users", users);
         return "users";
